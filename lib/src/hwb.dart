@@ -37,7 +37,7 @@ List<num> rgb(ListBase<num> hwb) {
 
   final n = wh + f * (v - wh); // Linear interpolation
 
-  double r, g, b;
+  double? r, g, b;
 
   if (i == 6 || i == 0) {
     r = v;
@@ -64,5 +64,5 @@ List<num> rgb(ListBase<num> hwb) {
     g = wh;
     b = n;
   }
-  return [r * 255, g * 255, b * 255];
+  return [r! * 255, g! * 255, b! * 255];
 }

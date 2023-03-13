@@ -4,7 +4,7 @@ import 'dart:core';
 import 'routes.dart';
 
 List<String> _getRoute(List<String> path, String current, String to) {
-  for (final kv in conversionRoutes[current].entries) {
+  for (final kv in conversionRoutes[current]!.entries) {
     final key = kv.key;
     if (path.contains(key)) {
       continue;
@@ -13,7 +13,7 @@ List<String> _getRoute(List<String> path, String current, String to) {
       path.add(current);
     }
     path.add(key);
-    if (conversionRoutes[key].containsKey(to)) {
+    if (conversionRoutes[key]!.containsKey(to)) {
       path.add(to);
       return path;
     } else {
@@ -29,20 +29,20 @@ List<String> _getRoute(List<String> path, String current, String to) {
 dynamic _convert(String from, String to, dynamic value) {
   dynamic result;
 
-  if (conversionRoutes[from].containsKey(to)) {
-    result = (conversionRoutes[from][to](value));
+  if (conversionRoutes[from]!.containsKey(to)) {
+    result = (conversionRoutes[from]![to](value));
   } else {
     var path = _getRoute([], from, to);
     var currentFrom = from;
     result = value;
     for (var currentTo in path) {
-      result = conversionRoutes[currentFrom][currentTo](result);
+      result = conversionRoutes[currentFrom]![currentTo](result);
       currentFrom = currentTo;
     }
   }
 
   if (result is List) {
-    return _ConversionResult(result);
+    return _ConversionResult(result as List<num>);
   }
   return result;
 }
@@ -135,7 +135,7 @@ const symbolToString = {
 };
 
 String getMemberName(Symbol symbol) {
-  return symbolToString[symbol];
+  return symbolToString[symbol]!;
 }
 
 class _ConvertRouteReceiver {

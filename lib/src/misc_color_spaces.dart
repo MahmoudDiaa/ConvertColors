@@ -16,7 +16,7 @@ List<num> lch2lab(ListBase<num> lch) {
 }
 
 List<num> hex2rgb(dynamic hex) {
-  int integer;
+  int? integer;
 
   if (hex is String) {
     if (hex.length == 3) {
@@ -25,7 +25,7 @@ List<num> hex2rgb(dynamic hex) {
     integer = int.parse(hex, radix: 16);
   }
 
-  return [integer >> 16 & 0xff, integer >> 8 & 0xff, integer & 0xff];
+  return [integer! >> 16 & 0xff, integer >> 8 & 0xff, integer & 0xff];
 }
 
 List<num> ansi162rgb(num args) {

@@ -27,7 +27,7 @@ List<num> xyz(ListBase<num> lab) {
   return [x, y, z];
 }
 
-List<num> lch(ListBase<num> lab) {
+List<num> lch(List<num> lab) {
   const PI = 3.141526;
 
   final l = lab[0];

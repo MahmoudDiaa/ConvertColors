@@ -1,10 +1,9 @@
-import 'dart:collection';
 import 'dart:math';
 import 'color_name.dart';
 
 var reverseKeywords = cssKeywords.map((key, value) => MapEntry(value, key));
 
-int _comparativeDistance(ListBase<num> x, ListBase<num> y) {
+int _comparativeDistance(List<num> x, List<num> y) {
   /*
 		See https://en.m.wikipedia.org/wiki/Euclidean_distance#Squared_Euclidean_distance
 	*/
@@ -12,7 +11,7 @@ int _comparativeDistance(ListBase<num> x, ListBase<num> y) {
       .toInt();
 }
 
-List<num> hsl(ListBase<num> rgb) {
+List<num> hsl(List<num> rgb) {
   final r = rgb[0] / 255;
   final g = rgb[1] / 255;
   final b = rgb[2] / 255;
@@ -20,7 +19,7 @@ List<num> hsl(ListBase<num> rgb) {
   final min_ = min(min(r, g), b);
   final max_ = max(max(r, g), b);
   final delta = max_ - min_;
-  double h, s;
+  double? h, s;
 
   if (max_ == min_) {
     h = 0;
@@ -32,7 +31,7 @@ List<num> hsl(ListBase<num> rgb) {
     h = 4 + (r - g) / delta;
   }
 
-  h = min(h * 60, 360);
+  h = min(h! * 60, 360);
 
   if (h < 0) {
     h += 360;
@@ -51,8 +50,8 @@ List<num> hsl(ListBase<num> rgb) {
   return [h, s * 100, l * 100];
 }
 
-List<num> hsv(ListBase<num> rgb) {
-  double rdif, gdif, bdif, h, s;
+List<num> hsv(List<num> rgb) {
+  double? rdif, gdif, bdif, h, s;
 
   final r = rgb[0] / 255;
   final g = rgb[1] / 255;
@@ -80,10 +79,10 @@ List<num> hsv(ListBase<num> rgb) {
       h = (2 / 3) + gdif - rdif;
     }
 
-    if (h < 0) {
-      h += 1;
-    } else if (h > 1) {
-      h -= 1;
+    if (h!< 0) {
+      h+= 1;
+    } else if (h> 1) {
+      h-= 1;
     }
   }
 
@@ -118,19 +117,19 @@ List<num> cmyk(List<num> rgb) {
   ];
 }
 
-String keyword(ListBase<num> rgb) {
+String keyword(List<num> rgb) {
   if (reverseKeywords.containsValue(rgb)) {
-    return reverseKeywords[rgb];
+    return reverseKeywords[rgb]!;
   }
 
   var currentClosestDistance = double.infinity;
-  String currentClosestKeyword;
+  String? currentClosestKeyword;
 
   for (final keyword in cssKeywords.keys) {
-    var value = cssKeywords[keyword];
+    var value = cssKeywords[keyword]!;
 
     // Compute comparative distance
-    final distance = _comparativeDistance(rgb, value);
+    final distance = _comparativeDistance(rgb, value );
 
     // Check if its less, if so set as closest
     if (distance < currentClosestDistance) {
@@ -139,13 +138,13 @@ String keyword(ListBase<num> rgb) {
     }
   }
 
-  return currentClosestKeyword;
+  return currentClosestKeyword!;
 }
 
 List<num> xyz(List<num> rgb) {
-  var r = rgb[0] / 255.0;
-  var g = rgb[1] / 255.0;
-  var b = rgb[2] / 255.0;
+  num r = rgb[0] / 255.0;
+  num g = rgb[1] / 255.0;
+  num b = rgb[2] / 255.0;
 
   // Assume sRGB
   r = r > 0.04045 ? pow((r + 0.055) / 1.055, 2.4) : (r / 12.92);
@@ -161,9 +160,9 @@ List<num> xyz(List<num> rgb) {
 
 List<num> lab(List<num> rgb) {
   final xyz_ = xyz(rgb);
-  var x = xyz_[0].toDouble();
-  var y = xyz_[1].toDouble();
-  var z = xyz_[2].toDouble();
+  num x = xyz_[0].toDouble();
+  num y = xyz_[1].toDouble();
+  num z = xyz_[2].toDouble();
 
   x /= 95.047;
   y /= 100;
@@ -180,12 +179,12 @@ List<num> lab(List<num> rgb) {
   return [l, a, b];
 }
 
-int ansi16(List<num> rgb, {int saturation}) {
+int ansi16(List<num> rgb, { int? saturation}) {
   final r = rgb[0];
   final g = rgb[1];
   final b = rgb[2];
 
-  var value = saturation ?? hsv(rgb)[2]; // Hsv -> ansi16 optimization
+  var value = saturation!; // Hsv -> ansi16 optimization
 
   value = (value / 50).round();
 
